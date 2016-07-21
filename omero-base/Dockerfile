@@ -12,8 +12,9 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     openjdk-7-jre-headless ice35-services python-zeroc-ice \
     mencoder nano postgresql-client-9.3 postgresql-client-common
 
-ENV BRANCH 5.2.1
+ENV BRANCH 5.2.4
 ENV LABEL ICE=3.5
+ENV ICE 35
 
 # Path variables
 ENV OMERO_DIR /omero
@@ -30,7 +31,7 @@ RUN chown omero $OMERO_DIR
 USER omero
 WORKDIR $OMERO_DIR
 
-RUN omego download --branch=$BRANCH --labels $LABEL --unzipdir . -v server
+RUN omego download --branch=$BRANCH --ice $ICE --unzipdir . -v server
 RUN rm OMERO.server*zip
 
 RUN ln -s OMERO.server-* $OMERO_HOME
