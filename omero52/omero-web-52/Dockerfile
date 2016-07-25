@@ -1,4 +1,4 @@
-FROM omero-base
+FROM omero-base-52
 
 MAINTAINER hadrien.mary@gmail.com
 

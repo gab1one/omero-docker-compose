@@ -1,0 +1,43 @@
+version: '2'
+services:
+
+  omero-data-52:
+    container_name: omero-data-52
+    build: omero-data-52
+    command: "true"
+    privileged: true
+    volumes:
+      - /OMERO/52:/data:Z
+
+  omero-pg-52:
+    container_name: omero-pg-52
+    build: omero-postgres-52
+    volumes_from:
+      - omero-data-52
+    environment:
+      - PGDATA=/data/postgres
+
+  omero-server-52:
+    container_name: omero-server-52
+    build: omero-server-52
+    volumes_from:
+      - omero-data-52
+    links:
+      - omero-pg-52:omero-db-52
+    ports:
+      - "4064:4064"
+
+  omero-web-52:
+    container_name: omero-web-52
+    build: omero-web-52
+    volumes_from:
+      - omero-data-52
+    links:
+      - omero-server-52:omero_server-52
+    ports:
+      - "80:80"
+      - "443:443"
+      - "4080:4080"
+    environment:
+      - OMERO_WEB_USE_SSL=yes
+      - OMERO_WEB_DEVELOPMENT=no
