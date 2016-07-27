@@ -23,7 +23,7 @@ services:
     volumes_from:
       - omero-data-52
     links:
-      - omero-pg-52:omero-db-52
+      - omero-pg-52:omero-db
     ports:
       - "4064:4064"
 

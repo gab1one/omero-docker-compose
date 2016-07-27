@@ -1,0 +1,43 @@
+version: '2'
+services:
+
+  omero-data-51:
+    container_name: omero-data-51
+    build: omero-data-51
+    command: "true"
+    privileged: true
+    volumes:
+      - /OMERO/51:/data:Z
+
+  omero-pg-51:
+    container_name: omero-pg-51
+    build: omero-postgres-51
+    volumes_from:
+      - omero-data-51
+    environment:
+      - PGDATA=/data/postgres
+
+  omero-server-51:
+    container_name: omero-server-51
+    build: omero-server-51
+    volumes_from:
+      - omero-data-51
+    links:
+      - omero-pg-51:omero-db
+    ports:
+      - "4064:4064"
+
+  omero-web-51:
+    container_name: omero-web-51
+    build: omero-web-51
+    volumes_from:
+      - omero-data-51
+    links:
+      - omero-server-51:omero_server-51
+    ports:
+      - "80:80"
+      - "443:443"
+      - "4080:4080"
+    environment:
+      - OMERO_WEB_USE_SSL=yes
+      - OMERO_WEB_DEVELOPMENT=no
